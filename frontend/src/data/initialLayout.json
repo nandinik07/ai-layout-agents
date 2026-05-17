@@ -1,0 +1,48 @@
+{
+"rootNodes": ["artboard_1778485662755_3"],
+"nodes": {
+"artboard_1778485662755_3": {
+"id": "artboard_1778485662755_3",
+"type": "canvas",
+"width": 1080, "height": 1080,
+"nx": 0, "ny": 0, "nw": 1, "nh": 1,
+"style": { "backgroundColor": "#ffffff" }
+},
+"text_1778486306230_8": {
+"id": "text_1778486306230_8", "type": "text", "text": "NEW ARRIVALS",
+"nx": 0.5, "ny": 0.15, "nw": 0.8, "nh": 0.1,
+"x": 540, "y": 162, "width": 864, "height": 108,
+"style": { "fontSize": 64, "color": "#111827", "fontWeight": "bold" }
+},
+"text_1778486136643_7": {
+"id": "text_1778486136643_7", "type": "text", "text": "Spring Collection 2026",
+"nx": 0.5, "ny": 0.25, "nw": 0.6, "nh": 0.05,
+"x": 540, "y": 270, "width": 648, "height": 54,
+"style": { "fontSize": 32, "color": "#4B5563" }
+},
+"img_1778489515746_17": {
+"id": "img_1778489515746_17", "type": "image",
+"nx": 0.5, "ny": 0.6, "nw": 0.5, "nh": 0.5,
+"x": 540, "y": 648, "width": 540, "height": 540,
+"style": { "backgroundColor": "#E5E7EB", "borderRadius": 16 }
+},
+"circle_1778488914968_15": {
+"id": "circle_1778488914968_15", "type": "shape", "shapeType": "circle",
+"nx": 0.8, "ny": 0.4, "nw": 0.2, "nh": 0.2,
+"x": 864, "y": 432, "width": 216, "height": 216,
+"style": { "backgroundColor": "#EF4444" }
+},
+"text_1778489078397_16": {
+"id": "text_1778489078397_16", "type": "text", "text": "50%\nOFF",
+"nx": 0.8, "ny": 0.4, "nw": 0.15, "nh": 0.1,
+"x": 864, "y": 432, "width": 162, "height": 108,
+"style": { "fontSize": 36, "color": "#FFFFFF", "fontWeight": "bold" }
+},
+"text_1778486004640_6": {
+"id": "text_1778486004640_6", "type": "text", "text": "Limited Time Only",
+"nx": 0.5, "ny": 0.92, "nw": 0.4, "nh": 0.05,
+"x": 540, "y": 993, "width": 432, "height": 54,
+"style": { "fontSize": 24, "color": "#6B7280" }
+}
+}
+}
