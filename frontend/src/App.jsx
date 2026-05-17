@@ -1,17 +1,22 @@
+import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
+import { LayoutTemplate } from 'lucide-react';
+import ChatPanel from './components/ChatPanel';
+import WireframePreview from './components/WireframePreview';
+import JsonViewer from './components/JsonViewer';
+import INITIAL_LAYOUT from './data/initialLayout.json';
+
 export default function App() {
   const [layout, setLayout] = useState(INITIAL_LAYOUT);
 
   const [history, setHistory] = useState([
     {
       role: 'assistant',
-      content:
-        'Hi! I am your AI Layout Agent. How would you like to modify this design?',
+      content: 'Hi! I am your AI Layout Agent. How would you like to modify this design?',
     },
   ]);
 
-  const [input, setInput] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
-  const [apiKey, setApiKey] = useState('');
   const [error, setError] = useState('');
 
   const chatEndRef = useRef(null);
@@ -21,57 +26,40 @@ export default function App() {
   }, [history]);
 
   const handleSend = async (messageText) => {
-    const text = messageText || input;
-
-    if (!text.trim()) return;
-
-    if (!apiKey) {
-      setError(
-        'Please enter your OpenAI API key in the top right to continue.'
-      );
-
-      setTimeout(() => setError(''), 5000);
-
-      return;
-    }
+    if (!messageText.trim()) return;
 
     const newUserMsg = {
       role: 'user',
-      content: text,
+      content: messageText,
     };
 
     const newHistory = [...history, newUserMsg];
-
     setHistory(newHistory);
-    setInput('');
     setIsProcessing(true);
     setError('');
 
     try {
+      // Get the last 6 messages for context handling
       const recentHistory = newHistory.slice(-6);
 
-      const llmResponse = await fetchOpenAIResponse(
-        text,
-        recentHistory,
-        apiKey
-      );
+      // ACTUAL API CALL TO YOUR NODE.JS BACKEND
+      const response = await axios.post('/api/chat', {
+        message: messageText,
+        current_layout: layout,
+        history: recentHistory
+      });
 
-      if (llmResponse.actions && llmResponse.actions.length > 0) {
-        const updatedLayout = executeTransformations(
-          layout,
-          llmResponse.actions
-        );
+      const { updated_layout, assistant_message } = response.data;
 
-        setLayout(updatedLayout);
+      if (updated_layout) {
+        setLayout(updated_layout);
       }
 
       setHistory((prev) => [
         ...prev,
         {
           role: 'assistant',
-          content:
-            llmResponse.assistant_message ||
-            "Done! I've updated the layout.",
+          content: assistant_message || "Done! I've updated the layout.",
         },
       ]);
     } catch (err) {
@@ -79,7 +67,7 @@ export default function App() {
         ...prev,
         {
           role: 'assistant',
-          content: `Error: ${err.message}. Please check your API key and try again.`,
+          content: `Error: ${err.response?.data?.error || err.message}. Ensure backend is running.`,
         },
       ]);
     } finally {
@@ -101,23 +89,10 @@ export default function App() {
             <h1 className="text-lg font-bold text-white leading-tight">
               AI Layout Agent
             </h1>
-
             <p className="text-xs text-gray-400">
               Hybrid Architecture: LLM Intent + Deterministic Engine
             </p>
           </div>
-        </div>
-
-        <div className="flex items-center gap-3 w-full md:w-auto">
-          <Settings size={16} className="text-gray-500" />
-
-          <input
-            type="password"
-            placeholder="Enter OpenAI API Key (sk-...)"
-            value={apiKey}
-            onChange={(e) => setApiKey(e.target.value)}
-            className="flex-1 md:w-64 bg-gray-950 border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-white placeholder-gray-600 transition-all"
-          />
         </div>
       </header>
 
@@ -128,9 +103,7 @@ export default function App() {
         <div className="lg:col-span-4">
           <ChatPanel
             history={history}
-            input={input}
-            setInput={setInput}
-            handleSend={handleSend}
+            onSend={handleSend}
             isProcessing={isProcessing}
             error={error}
             chatEndRef={chatEndRef}
